@@ -12,6 +12,8 @@ import { Textarea } from "../ui/textarea"
 import { Button } from "../ui/button"
 import { isBase64Image } from "@/lib/utils"
 import {useUploadThing} from "../../lib/uploadThing"
+import updateUser from "@/lib/actions/user.actions"
+import { usePathname, useRouter } from "next/navigation"
 
 
 interface USER_DATA {
@@ -28,6 +30,8 @@ interface USER_DATA {
 export default function AccountProfile({user, btnTitle}: USER_DATA) {
     const [files, setFiles] = useState<File[]>([])
     const {startUpload} = useUploadThing("media")
+    const pathname = usePathname()
+    const router = useRouter()
     const form = useForm<z.infer<typeof onboardSchema>>({
         resolver: zodResolver(onboardSchema),
         defaultValues: {
@@ -65,9 +69,20 @@ export default function AccountProfile({user, btnTitle}: USER_DATA) {
             if(imgRes && imgRes[0].fileUrl){
                 values.profile_photo = imgRes[0].fileUrl
             }
-            // TODO: Update user on the database
         }
-
+        await updateUser({
+            userId: user.id!,
+            username: values.username, 
+            name: values.name, bio: values.bio, 
+            image: values.profile_photo,
+            path: pathname
+        })
+        if(pathname === "/profile/edit"){
+            router.back()
+        }
+        else{
+            router.push("/")
+        }
     }
 
     return (
