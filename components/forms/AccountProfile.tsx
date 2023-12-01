@@ -1,7 +1,7 @@
 "use client"
 
 import { useForm } from "react-hook-form"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription} from "../ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "../ui/form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { onboardSchema } from "@/lib/validations/user"
@@ -12,7 +12,7 @@ import { Textarea } from "../ui/textarea"
 import { Button } from "../ui/button"
 import { isBase64Image } from "@/lib/utils"
 import {useUploadThing} from "../../lib/uploadThing"
-import updateUser from "@/lib/actions/user.actions"
+import {updateUser} from "@/lib/actions/user.actions"
 import { usePathname, useRouter } from "next/navigation"
 
 
@@ -73,8 +73,10 @@ export default function AccountProfile({user, btnTitle}: USER_DATA) {
         await updateUser({
             userId: user.id!,
             username: values.username, 
-            name: values.name, bio: values.bio, 
+            name: values.name, 
+            bio: values.bio, 
             image: values.profile_photo,
+            onboarded: true,
             path: pathname
         })
         if(pathname === "/profile/edit"){
@@ -110,6 +112,7 @@ export default function AccountProfile({user, btnTitle}: USER_DATA) {
                         onChange={(e) => handleImage(e, field.onChange)}
                         />
                     </FormControl>
+                    <FormMessage className='text-light-1 text-base-regular' />
                     </FormItem>
                 )}
                 />
@@ -121,10 +124,10 @@ export default function AccountProfile({user, btnTitle}: USER_DATA) {
                     <FormItem className="flex flex-1 flex-col justify-start gap-3 w-full">
                     <FormLabel className='text-base-semibold text-light-2 justify-start'> Name 
                     </FormLabel>
-                    <FormControl>
+                    <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">
                         <Input type='text' className='account-form_input' placeholder='your name' {...field}/>
                     </FormControl>
-                    <FormMessage className='' />
+                    <FormMessage className='text-light-1 text-base-regular' />
                     </FormItem>
                 )}
                 />
@@ -136,10 +139,10 @@ export default function AccountProfile({user, btnTitle}: USER_DATA) {
                     <FormItem className="flex flex-1 flex-col justify-start gap-3 w-full">
                     <FormLabel className='text-base-semibold text-light-2 justify-start'> Username
                     </FormLabel>
-                    <FormControl>
+                    <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">
                         <Input type='text' className='account-form_input' placeholder="@example"  {...field}/>
                     </FormControl>
-                    <FormMessage className='' />
+                    <FormMessage className='text-light-1 text-base-regular' />
                     </FormItem>
                 )}
                 />
@@ -151,14 +154,14 @@ export default function AccountProfile({user, btnTitle}: USER_DATA) {
                     <FormItem className="flex flex-1 flex-col justify-start gap-3 w-full">
                     <FormLabel className='text-base-semibold text-light-2 justify-start'> Bio 
                     </FormLabel>
-                    <FormControl>
+                    <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1 p-4">
                         <Textarea rows={10} className="account-form_input"  {...field}/>
                     </FormControl>
-                    <FormMessage className='' />
+                    <FormMessage className='text-light-1 text-base-regular' />
                     </FormItem>
                 )}
                 />
-                <Button type="submit" className="bg-primary-500"> Submit </Button>
+                <Button type="submit" className="bg-primary-500 w-28 font-semibold px-3 py-2"> Submit </Button>
             </form>
         </Form>
     )

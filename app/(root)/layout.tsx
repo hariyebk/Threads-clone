@@ -7,7 +7,7 @@ import { TopBar, BottomBar, RightSideBar, LeftSideBar } from '@/components/share
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'threads',
+  title: 'Threads',
   description: 'threads clone',
 }
 

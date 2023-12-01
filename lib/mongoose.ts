@@ -15,3 +15,4 @@ export async function connectToDb() {
         console.log(error)
     }
 }
+
