@@ -3,7 +3,7 @@ import Link from "next/link"
 
 interface POSTDETAIL {
     id: String,
-    currentuser: String,
+    currentuser: String | null,
     parentId: String | null,
     content: String,
     author: {name: String, image: String, id: string},
@@ -19,11 +19,9 @@ interface POSTDETAIL {
 }
 export default function ThreadCard({postDetail}: {postDetail: POSTDETAIL}) {
     const {id, currentuser, parentId, content, author, community, createdAt, comments, isComment} = postDetail
-    function handleLike(){
 
-    }
     return (
-        <article className="flex w-full flex-col rounded-xl bg-dark-2 p-7">
+        <article className={`flex w-full flex-col rounded-xl ${isComment ? "px-0 xs:px-7" : "bg-dark-2 p-7"}`}>
             <div className="flex items-center justify-between">
                 <div className="flex w-full flex-1 flex-row gap-4 ">
                     {/* user profile */}
@@ -32,7 +30,6 @@ export default function ThreadCard({postDetail}: {postDetail: POSTDETAIL}) {
                             <Image src={String(author.image)} alt="profile-image"
                             className="cursor-pointer rounded-full" width={25} height={25}/>
                         </Link>
-                        {/* TODO: */}
                         <div className="thread-card_bar mr-3 -mt-2" />
                     </div>
                     {/* user's name */}
@@ -41,7 +38,7 @@ export default function ThreadCard({postDetail}: {postDetail: POSTDETAIL}) {
                             <h2 className="relative text-base-semibold text-light-1 cursor-pointer"> {author.name} </h2>
                         </Link>
                         <p className="text-small-regular text-light-2"> {content} </p>
-                        <div className="mt-5 flex flex-col gap-3">
+                        <div className="mt-2 flex flex-col gap-3">
                             <div className = "flex gap-3.5">
                                 <Image src="/assets/heart-gray.svg" alt="heart" width={24} height={24} className="cursor-pointer object-contain"/>
                                 <Link href={`/post/${id}`}>

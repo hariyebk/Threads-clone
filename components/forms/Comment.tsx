@@ -27,7 +27,7 @@ export default function Comment({postId, userId, image}: COMMENTPROPS) {
 
     async function onSubmit(values: z.infer<typeof commentSchema>) {
         await AddCommentToThread({threadId: postId, userId: JSON.parse(userId), comment: values.thread, pathname})
-        // clear the input.
+        // clear the input field.
         form.reset()
     }
 

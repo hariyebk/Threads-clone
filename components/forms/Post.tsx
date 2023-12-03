@@ -5,7 +5,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from ".
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { postSchema } from "@/lib/validations/threads"
-import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
 import { Button } from "../ui/button"
 import { usePathname, useRouter } from "next/navigation"
