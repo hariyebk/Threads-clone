@@ -70,3 +70,34 @@ export async function like(postId: string, userId: string) {
     }
     
 }
+
+export async function fetchPostById(id: string) {
+    try{
+        connectToDb()
+        //TODO: populate community
+        return await Threads.findById(id).populate({path: "author", model: User, select: "_id id name image"}).populate({path: "children", populate: [
+            {
+            path: "author",
+            model: User,
+            select: "_id id name image"
+            },
+            // comments of a post could also have coments for them.
+            {
+            path: "children",
+            model: Threads,
+            populate: {
+                path: "children",
+                model: Threads,
+                populate: {
+                    path: "author",
+                    model: User,
+                    select: "_id id name image parentId"
+                }
+            }
+            }
+        ]}).exec()
+    }
+    catch(error: any){
+        throw new Error(error.messgae)
+    }
+}
