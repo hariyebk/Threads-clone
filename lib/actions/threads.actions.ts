@@ -11,6 +11,12 @@ author: string,
     communityId: mongoose.Schema.Types.ObjectId | null,
     path: string,
 }
+interface AddCommentParams {
+    threadId: string,
+    userId: string,
+    comment: string,
+    pathname: string
+}
 export async function createThread({text, author, communityId, path}: Params) {
     try{
     connectToDb()
@@ -100,4 +106,32 @@ export async function fetchPostById(id: string) {
     catch(error: any){
         throw new Error(error.messgae)
     }
+}
+
+export async function AddCommentToThread({threadId,comment, userId, pathname}: AddCommentParams) {
+    try{
+        connectToDb()
+        const originalThread = await Threads.findById(threadId)
+        if(!originalThread) throw new Error("post not found")
+        // create a new thread for the comment
+        const commentThread = new Threads({
+            text: comment,
+            author: userId,
+            parentId: threadId
+        })
+        // save the comment thread
+        const savedCommentThread = await commentThread.save()
+
+        // update the parent Thread
+        originalThread.children.push(savedCommentThread._id)
+
+        // save the parent Thread
+        await originalThread.save()
+        // update the page
+        revalidatePath(pathname)
+    }
+    catch(error: any){
+        console.log(error.message)
+    }
+    
 }

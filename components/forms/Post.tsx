@@ -50,7 +50,7 @@ export default function Post({userId}: {userId:  string}) {
                     </FormItem>
                 )}
                 />
-                <Button type="submit" className="bg-primary-500 w-28 font-semibold px-3 py-2"> Post </Button>
+                <Button type="submit" className="bg-primary-500 w-28 font-semibold text-light-2"> Post </Button>
             </form>
         </Form>
 

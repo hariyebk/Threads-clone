@@ -3,6 +3,7 @@ import { currentUser } from "@clerk/nextjs";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import { fetchPostById } from "@/lib/actions/threads.actions";
+import Comment from "@/components/forms/Comment";
 
 
 export default async function page({params}: {params: {id: string}}) {
@@ -11,8 +12,8 @@ export default async function page({params}: {params: {id: string}}) {
     // if the current user is not onboarded he can't see the replies to apost
     const userInfo  = await fetchUser(user?.id!)
     if(!userInfo?.onboarded) redirect("/onboarding")
+    console.log(userInfo._id)
     const post = await fetchPostById(params.id)
-    console.log(post)
 
     return ( 
         <section className="relative">
@@ -29,8 +30,9 @@ export default async function page({params}: {params: {id: string}}) {
                 comments: post.children
             }}  />
             </div>
-            <div>
-                
+            {/* replies */}
+            <div className="mt-7">
+                <Comment postId={params.id} userId={JSON.stringify(userInfo._id)} image={user?.imageUrl!}/>
             </div>
         </section>
     )
