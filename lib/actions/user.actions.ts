@@ -3,7 +3,7 @@
 import { connectToDb } from "../mongoose"
 import User from "../models/user.model"
 import { revalidatePath } from "next/cache"
-import { AnyARecord } from "dns"
+import Threads from "../models/threads.model"
 
 interface USER_INFO {
     userId: string | undefined,
@@ -40,6 +40,31 @@ export async function fetchUser(userId: string) {
     try{
     connectToDb()
     return  await User.findOne({id: userId})
+    }
+    catch(error: any){
+        throw new Error(error.message)
+    }
+    
+}
+export async function fetchUserPosts(userId: string) {
+    try{
+        connectToDb()
+        // TODO: populate community
+        const user = await User.findOne({id: userId}).populate({
+            path: "threads",
+            model: Threads,
+            populate: {
+                path: "children", 
+                model: Threads,
+                populate: {
+                    path: "author",
+                    model: User,
+                    select: "id name image username"
+                }
+            }
+        })
+
+        return user
     }
     catch(error: any){
         throw new Error(error.message)

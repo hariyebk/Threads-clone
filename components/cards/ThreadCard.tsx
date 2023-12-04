@@ -2,17 +2,17 @@ import Image from "next/image"
 import Link from "next/link"
 
 interface POSTDETAIL {
-    id: String,
-    currentuser: String | null,
-    parentId: String | null,
-    content: String,
-    author: {name: String, image: String, id: string},
-    community: {id: String, name: String, image: String} | null,
-    createdAt: String,
+    id: string,
+    currentuser: string | null,
+    parentId: string | null,
+    content: string,
+    author: {name: string, image: string, id: string},
+    community: {id: string, name: string, image: string} | null,
+    createdAt: string,
     comments: {
         author:{
             // we only want to show the commenters image on the home page not details of the comment.
-            image: String,
+            image: string,
         }
     }[],
     isComment?: boolean

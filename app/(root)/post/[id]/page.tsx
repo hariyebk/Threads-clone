@@ -19,9 +19,11 @@ export default async function page({params}: {params: {id: string}}) {
 
     return ( 
         <section className="relative overflow-auto">
-            <Link href="/">
-                <Image src = "/assets/back.png" alt = "left-arrow" width={20} height={20} className="mb-8"/>
-            </Link>
+            <div  className="w-[30px]">
+                <Link href="/">
+                    <Image src = "/assets/back.png" alt = "left-arrow" width={24} height={24} className="mb-8"/>
+                </Link>
+            </div>
             {/* starting thread */}
             <div>
             <ThreadCard  postDetail={{
