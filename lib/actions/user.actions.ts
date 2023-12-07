@@ -4,6 +4,7 @@ import { connectToDb } from "../mongoose"
 import User from "../models/user.model"
 import { revalidatePath } from "next/cache"
 import Threads from "../models/threads.model"
+import { FilterQuery, SortOrder } from "mongoose"
 
 interface USER_INFO {
     userId: string | undefined,
@@ -70,4 +71,53 @@ export async function fetchUserPosts(userId: string) {
         throw new Error(error.message)
     }
     
+}
+export async function fetchAllUsers({
+    userId, 
+    pagenumber = 1,
+    pageSize = 20, 
+    searchString = "", 
+    sortBy = "desc" 
+}: {
+    userId: string,
+    pagenumber?: number,
+    pageSize?: number,
+    searchString?: string,
+    sortBy?: SortOrder
+}) {
+    try{
+    connectToDb()
+    const skipAmount = (pagenumber - 1 ) * pageSize
+    // allow for case-insensitive searching
+    const regex = new RegExp(searchString, "i")
+    // query all users except the current user
+    const query:FilterQuery<typeof User> = {
+        id: {$ne: userId}
+    }
+    // filtering
+    if(searchString.trim() !== ""){
+        query.$or = [
+            {username: {$regex: regex}},
+            {name: {$regex: regex}}
+        ]
+    }
+    // sorting
+    const sortOptions = {createdAt: sortBy}
+
+    const usersQuery = User.find(query).sort(sortOptions).skip(skipAmount).limit(pageSize)
+
+    // total number of documents that satisfy the query.
+    const totalUsersCount = await User.countDocuments(query)
+    
+    // excute the query
+    const users = await usersQuery.exec()
+
+    // check if the nextpage exists
+    const isNext = totalUsersCount > skipAmount + users.length
+    
+    return {users, isNext}
+    }
+    catch(error: any){
+        throw new Error(error.message)
+}
 }

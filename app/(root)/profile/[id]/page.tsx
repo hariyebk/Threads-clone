@@ -12,7 +12,7 @@ export default async function page({params}: {params: {id: string}}) {
     const userInfo = await fetchUser(params.id)
     if(!userInfo.onboarded) redirect("/onboarding")
     return (
-        <section className="">
+        <section className="custom-scrollbar">
             <ProfileHeader accountId={userInfo._id} currentUser={user?.id!} name={userInfo.name} username={userInfo.username} bio={userInfo.bio} imageUrl = {userInfo.image} />
             <div className="my-10">
             <Tabs defaultValue="threads" className="w-full">
@@ -30,7 +30,7 @@ export default async function page({params}: {params: {id: string}}) {
                 {profileTabs.map((tab) => {
                     return (
                         <TabsContent key={`content ${tab.label}`} value = {tab.value} className="w-full text-light-1">
-                            <ThreadsTab currentuser = {user?.id!} accountId =  {userInfo.id} accountType = "User" />
+                            <ThreadsTab currentuser = {user?.id!} accountId =  {userInfo.id} accountType = "User" postType = {tab.value}/>
                         </TabsContent>
                     )
                 })}
