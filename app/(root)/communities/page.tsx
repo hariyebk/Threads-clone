@@ -1,6 +1,9 @@
 
 export default function page() {
     return (
-        <h1 className='head-text'> Communities </h1>
+        <section className="">
+            <h1 className='head-text'> 
+            Communities </h1>
+        </section>
     )
 }
