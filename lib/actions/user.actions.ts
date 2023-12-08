@@ -121,3 +121,26 @@ export async function fetchAllUsers({
         throw new Error(error.message)
 }
 }
+export async function getUserComments(userId: string) {
+    try{
+    connectToDb()
+    // find all posts made by the user.
+    const userThreads = await Threads.find({
+        author: userId,
+    })
+    // collection of all comment id's from all the posts made by the user into a single array.
+    const childThreads = userThreads.reduce((acc, userThread) => acc.concat(userThread.children), [])
+    // comments made by other user 
+    const comments = await Threads.find({
+        id: {$in: childThreads},
+        author: {$ne: userId},
+        parentId: {$nin: [null, undefined]}
+    }).populate({path: "author", model: User, select: "name image _id"})
+
+    return comments
+
+    }
+    catch(error: any){
+        throw new Error(error.message)
+    }
+}
